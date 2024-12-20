@@ -1,35 +1,14 @@
-import random
+import socket
+HOST = '127.0.0.1'     # Endereco IP do Servidor
+PORT = 5000            # Porta que o Servidor esta
+tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+dest = (HOST, PORT)
 
-from tcp import *
-from time import *
 
-serverIP = "1.1.1.1"
-serverPort = 1234
-
-client = TCPClient()
-
-def onTCPConnectionChange(type):
-	print("connection to " + client.remoteIP() + " changed to state " + str(type))
-
-def onTCPReceive(data):
-	print("received from " + client.remoteIP() + " with data: " + data)
-
-def main():
-	client.onConnectionChange(onTCPConnectionChange)
-	client.onReceive(onTCPReceive)
-
-	print(client.connect(serverIP, serverPort))
-
-	count = 0
-	while True:
-		
-		list1 = [1, 2]
-		numero_tentado = random.choice(list1)
-
-		data = numero_tentado
-		client.send(data)
-
-		sleep(1)
-
-if __name__ == "__main__":
-	main()
+tcp.connect(dest)
+print('Para sair use CTRL+X')
+msg = input()
+while msg != 'sair':
+    tcp.send(msg.encode())
+    msg = input()
+tcp.close()
